@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-main-layout',
+  standalone: true,
   imports: [],
   templateUrl: './main-layout.html',
-  styleUrl: './main-layout.css',
+  styleUrls: ['./main-layout.css'],
 })
-export class MainLayout {
+export class MainLayoutComponent {
 
 }
