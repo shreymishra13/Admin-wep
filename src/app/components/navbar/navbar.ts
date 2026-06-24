@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -11,21 +11,14 @@ import { Observable } from 'rxjs';
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   currentUser$: Observable<any>;
-  showUserMenu: boolean = false;
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {
     this.currentUser$ = this.authService.currentUser$;
-  }
-
-  ngOnInit(): void {}
-
-  toggleUserMenu(): void {
-    this.showUserMenu = !this.showUserMenu;
   }
 
   logout(): void {

@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { MockApiService } from './mock-api.service';
+import { AuthUser } from '../data/users';
 
 export interface User {
   id: string;
   email: string;
   name: string;
-  role: string;
+  role: 'admin' | 'employee';
 }
 
 @Injectable({
@@ -18,29 +20,36 @@ export class AuthService {
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor() {}
+  constructor(private api: MockApiService) {}
 
-  login(email: string, password: string): Observable<any> {
-    // Simulate API call - replace with actual API integration
+  login(email: string, password: string): Observable<User> {
     return new Observable((observer) => {
-      setTimeout(() => {
-        const mockUser: User = {
-          id: '1',
-          email,
-          name: email.split('@')[0],
-          role: 'admin'
+      this.api.authenticate(email, password).subscribe((user) => {
+        if (!user) {
+          observer.error(new Error('Invalid login credentials'));
+          return;
+        }
+
+        if (user.role !== 'admin') {
+          observer.error(new Error('Only admin users can log in'));
+          return;
+        }
+
+        const authUser: User = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role
         };
-        
-        // Store in localStorage
+
         localStorage.setItem('auth_token', 'mock-jwt-token-' + Date.now());
-        localStorage.setItem('current_user', JSON.stringify(mockUser));
-        
+        localStorage.setItem('current_user', JSON.stringify(authUser));
         this.isAuthenticatedSubject.next(true);
-        this.currentUserSubject.next(mockUser);
-        
-        observer.next({ success: true, user: mockUser });
+        this.currentUserSubject.next(authUser);
+
+        observer.next(authUser);
         observer.complete();
-      }, 500);
+      });
     });
   }
 

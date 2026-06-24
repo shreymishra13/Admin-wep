@@ -1,1 +1,48 @@
-<p>dashboard works!</p>
+<section class="dashboard-welcome">
+  <div>
+    <p class="dashboard-badge">Welcome back</p>
+    <h1>Dashboard</h1>
+    <p class="dashboard-subtitle">Active employees overview for your admin panel.</p>
+  </div>
+
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <span>Active employees</span>
+      <strong>{{ employees.length }}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Active status</span>
+      <strong>100%</strong>
+    </div>
+  </div>
+</section>
+
+<section class="employee-section">
+  <div class="section-header">
+    <h2>Active Employees</h2>
+    <p>List of demo users currently signed in and available.</p>
+  </div>
+
+  <div class="employee-list">
+    <ng-container *ngIf="!loading; else loadingState">
+      <div *ngIf="employees.length; else noEmployees">
+        <div class="employee-row" *ngFor="let employee of employees">
+          <div class="employee-name">
+            <span>{{ employee.name }}</span>
+            <small>{{ employee.position }}</small>
+          </div>
+          <div class="employee-email">{{ employee.email }}</div>
+          <div class="employee-status">{{ employee.status }}</div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #loadingState>
+      <div class="loading-card">Loading employee data...</div>
+    </ng-template>
+
+    <ng-template #noEmployees>
+      <div class="loading-card">No active employees available.</div>
+    </ng-template>
+  </div>
+</section>

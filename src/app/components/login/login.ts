@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
@@ -16,15 +16,20 @@ export class LoginComponent {
   password: string = '';
   isLoading: boolean = false;
   errorMessage: string = '';
+  showPassword: boolean = false;
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
-  onSubmit(): void {
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Please fill in all fields';
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      this.errorMessage = 'Please enter a valid email and password.';
       return;
     }
 
@@ -32,13 +37,13 @@ export class LoginComponent {
     this.errorMessage = '';
 
     this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'Login failed. Please check your credentials.';
+        this.errorMessage = error?.message || 'Login failed. Please check your credentials.';
         console.error(error);
       }
     });

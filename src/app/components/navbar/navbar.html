@@ -3,22 +3,15 @@
     <div class="navbar-brand">
       <h3>Admin Panel</h3>
     </div>
-    
-    <div class="navbar-user">
-      <div *ngIf="currentUser$ | async as user" class="user-info">
-        <span>{{ user.name }}</span>
-        <div class="user-menu-trigger" (click)="toggleUserMenu()">
-          <div class="avatar">{{ user.name.charAt(0) }}</div>
-          <div class="dropdown-arrow">▼</div>
-        </div>
-        
-        <div *ngIf="showUserMenu" class="dropdown-menu">
-          <a href="javascript:void(0)" class="menu-item">Profile</a>
-          <a href="javascript:void(0)" class="menu-item">Settings</a>
-          <hr />
-          <a href="javascript:void(0)" class="menu-item logout" (click)="logout()">Logout</a>
-        </div>
+
+    <div class="navbar-user" *ngIf="currentUser$ | async as user">
+      <div class="user-details">
+        <span class="user-name">{{ user.name }}</span>
+        <span class="user-email">{{ user.email }}</span>
       </div>
+      <button class="signout-button" type="button" (click)="logout()">
+        Sign Out
+      </button>
     </div>
   </div>
 </nav>
